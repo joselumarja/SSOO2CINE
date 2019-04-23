@@ -13,10 +13,34 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Archivos de encabezado\Libraries">
+      <UniqueIdentifier>{533ab287-4729-4068-b913-d1682e36691f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Libraries">
+      <UniqueIdentifier>{cfbd0376-91ef-4d58-af68-9f388dc49ea9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Processes">
+      <UniqueIdentifier>{623b6499-5ed1-4e39-a2ee-d42c01b2b02b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="PrintColorText.h">
+      <Filter>Archivos de encabezado\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>Archivos de encabezado\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="TicketsRequest.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Definitions.h">
+      <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -25,6 +49,27 @@
     </ClCompile>
     <ClCompile Include="SSOO2CINE.cpp">
       <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="PrintColorText.cpp">
+      <Filter>Archivos de origen\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities.cpp">
+      <Filter>Archivos de origen\Libraries</Filter>
+    </ClCompile>
+    <ClCompile Include="TicketsRequest.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="TicketOffice.cpp">
+      <Filter>Processes</Filter>
+    </ClCompile>
+    <ClCompile Include="FoodAndDrink.cpp">
+      <Filter>Processes</Filter>
+    </ClCompile>
+    <ClCompile Include="PaymentGateway.cpp">
+      <Filter>Processes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

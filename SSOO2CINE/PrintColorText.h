@@ -20,3 +20,4 @@ void printColorText(std::string Text, ColorText Color);
 void printErrorColorText(std::string Text, ColorText Color);
 
 #endif
+

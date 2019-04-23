@@ -10,7 +10,7 @@ unsigned int countFileLines(std::string FilePath)
 	std::string Buffer;
 
 	File.open(FilePath, std::ios::in);
-	
+
 	if (!File.is_open())
 	{
 		std::cerr << "Fail opening the file: " << FilePath << std::endl;
@@ -38,7 +38,7 @@ void seekFileLine(std::wifstream & File, unsigned int LineNumber)
 
 bool isTheSameCharacterWithAccent(wchar_t Character1, wchar_t Character2)
 {
-	return isTheSameCharacterWithAccentImplicitDeclaration(Character1,Character2)||isTheSameCharacterWithAccentImplicitDeclaration(Character2,Character1);
+	return isTheSameCharacterWithAccentImplicitDeclaration(Character1, Character2) || isTheSameCharacterWithAccentImplicitDeclaration(Character2, Character1);
 }
 
 bool isTheSameCharacterWithAccentImplicitDeclaration(wchar_t Character, wchar_t CharacterWithAccent)
