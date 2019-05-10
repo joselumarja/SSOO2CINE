@@ -19,15 +19,9 @@
     <Filter Include="Archivos de origen\Libraries">
       <UniqueIdentifier>{cfbd0376-91ef-4d58-af68-9f388dc49ea9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Processes">
-      <UniqueIdentifier>{623b6499-5ed1-4e39-a2ee-d42c01b2b02b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="Client.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="PrintColorText.h">
@@ -42,15 +36,24 @@
     <ClInclude Include="Definitions.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
+    <ClInclude Include="PaymentRequest.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="CounterSemaphore.h">
+      <Filter>Archivos de encabezado\Libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="FoodAndDrinkRequest.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="StandStock.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="SSOO2CINE.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="Client.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="PrintColorText.cpp">
@@ -62,14 +65,14 @@
     <ClCompile Include="TicketsRequest.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="TicketOffice.cpp">
-      <Filter>Processes</Filter>
+    <ClCompile Include="PaymentRequest.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="FoodAndDrink.cpp">
-      <Filter>Processes</Filter>
+    <ClCompile Include="FoodAndDrinkRequest.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="PaymentGateway.cpp">
-      <Filter>Processes</Filter>
+    <ClCompile Include="StandStock.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

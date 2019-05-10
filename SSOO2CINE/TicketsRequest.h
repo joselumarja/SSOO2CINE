@@ -1,12 +1,18 @@
 #pragma once
+#include "Definitions.h"
+
 class TicketsRequest
 {
 public:
 	TicketsRequest();
+	TicketsRequest(int ClientId, unsigned char NumberOfSeats);
 	~TicketsRequest();
-private:
-	short NumberOfSeats;
+	int getClientId();
+	int getNumberOfSeats();
 
+private:
+	int ClientId;
+	unsigned char NumberOfSeats;
 
 };
 

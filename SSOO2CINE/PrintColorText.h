@@ -1,9 +1,8 @@
 #include <string>
 #include <Windows.h>
 #include <iostream>
+#include <shared_mutex>
 
-#ifndef PRINTCOLORTEXT_H
-#define PRINTCOLORTEXT_H
 
 enum class ColorText
 {
@@ -16,8 +15,14 @@ enum class ColorText
 	WhiteTextColor = 15
 };
 
-void printColorText(std::string Text, ColorText Color);
-void printErrorColorText(std::string Text, ColorText Color);
+class PrintColorText
+{
 
-#endif
+public:
+	PrintColorText();
+	void printColorText(std::string Text, ColorText Color);
+	void printErrorColorText(std::string Text, ColorText Color);
 
+private:
+	std::shared_mutex mutex;
+};
