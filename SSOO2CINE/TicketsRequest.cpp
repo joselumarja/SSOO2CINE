@@ -1,13 +1,12 @@
 #include "pch.h"
+#include "Client.h"
 #include "TicketsRequest.h"
-
 
 TicketsRequest::TicketsRequest()
 {
 }
 
-
-TicketsRequest::TicketsRequest(int ClientId, unsigned char NumberOfSeats)
+TicketsRequest::TicketsRequest(Client *ClientId, unsigned char NumberOfSeats)
 {
 	this->ClientId = ClientId;
 	this->NumberOfSeats = NumberOfSeats;
@@ -17,12 +16,12 @@ TicketsRequest::~TicketsRequest()
 {
 }
 
-int TicketsRequest::getClientId()
+void TicketsRequest::AcceptOperation()
 {
-	return ClientId;
+	ClientId->acceptTicketRequest();
 }
 
-int TicketsRequest::getNumberOfSeats()
+void TicketsRequest::DenyOperation()
 {
-	return NumberOfSeats;
+	ClientId->denyTicketRequest();
 }

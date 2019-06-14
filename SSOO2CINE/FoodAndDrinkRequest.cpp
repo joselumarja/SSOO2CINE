@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Client.h"
 #include "FoodAndDrinkRequest.h"
 
 
@@ -6,23 +7,18 @@ FoodAndDrinkRequest::FoodAndDrinkRequest()
 {
 }
 
-FoodAndDrinkRequest::FoodAndDrinkRequest(unsigned char NumberOfPopcorns, unsigned char NumberOfDrinks)
+FoodAndDrinkRequest::FoodAndDrinkRequest(Client *ClientId, unsigned char NumberOfPopcorns, unsigned char NumberOfDrinks)
 {
+	this->ClientId = ClientId;
 	this->NumberOfPopcorns = NumberOfPopcorns;
 	this->NumberOfDrinks = NumberOfDrinks;
 }
-
 
 FoodAndDrinkRequest::~FoodAndDrinkRequest()
 {
 }
 
-unsigned char FoodAndDrinkRequest::getNumberOfDrinks()
+void FoodAndDrinkRequest::RequestCompleted()
 {
-	return NumberOfDrinks;
-}
-
-unsigned char FoodAndDrinkRequest::getNumberOfPopcorns()
-{
-	return NumberOfPopcorns;
+	ClientId->acceptFoodAndDrinkRequest();
 }

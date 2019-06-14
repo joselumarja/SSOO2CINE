@@ -1,14 +1,27 @@
 #pragma once
+
+class Client;
+
 class FoodAndDrinkRequest
 {
 public:
 	FoodAndDrinkRequest();
-	FoodAndDrinkRequest(unsigned char NumberOfPopcorns, unsigned char NumberOfDrinks);
+	FoodAndDrinkRequest(Client *ClientId, unsigned char NumberOfPopcorns, unsigned char NumberOfDrinks);
 	~FoodAndDrinkRequest();
-	unsigned char getNumberOfDrinks();
-	unsigned char getNumberOfPopcorns();
+
+	inline unsigned char getNumberOfDrinks()
+	{
+		return NumberOfDrinks;
+	}
+	inline unsigned char getNumberOfPopcorns()
+	{
+		return NumberOfPopcorns;
+	}
+
+	void RequestCompleted();
 
 private:
+	Client *ClientId;
 	unsigned char NumberOfPopcorns;
 	unsigned char NumberOfDrinks;
 };

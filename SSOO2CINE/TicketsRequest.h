@@ -1,17 +1,23 @@
 #pragma once
-#include "Definitions.h"
+
+class Client;
 
 class TicketsRequest
 {
 public:
 	TicketsRequest();
-	TicketsRequest(int ClientId, unsigned char NumberOfSeats);
+	TicketsRequest(Client *ClientId, unsigned char NumberOfSeats);
 	~TicketsRequest();
-	int getClientId();
-	int getNumberOfSeats();
+	inline int getNumberOfSeats()
+	{
+		return NumberOfSeats;
+	}
+
+	void AcceptOperation();
+	void DenyOperation();
 
 private:
-	int ClientId;
+	Client *ClientId;
 	unsigned char NumberOfSeats;
 
 };

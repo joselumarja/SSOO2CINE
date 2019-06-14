@@ -19,6 +19,24 @@
     <Filter Include="Archivos de origen\Libraries">
       <UniqueIdentifier>{cfbd0376-91ef-4d58-af68-9f388dc49ea9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\Tickets">
+      <UniqueIdentifier>{4260379b-ab54-47eb-abac-c36db89d1d8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Tickets">
+      <UniqueIdentifier>{e4161e14-2107-48a0-8aba-dbe234287a52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Stands">
+      <UniqueIdentifier>{f4cf4bea-ab14-4fb7-9ffc-7be3df7a30b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Stands">
+      <UniqueIdentifier>{d51d3428-8df8-449d-b75d-cd8f55cf5491}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Replenishment">
+      <UniqueIdentifier>{0edd9dd9-5119-4691-ab4a-feb9eaab8396}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de encabezado\Replenishment">
+      <UniqueIdentifier>{2653e775-0f5e-4870-a37b-058c67e28dee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -30,9 +48,6 @@
     <ClInclude Include="Utilities.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="TicketsRequest.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="Definitions.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
@@ -42,11 +57,38 @@
     <ClInclude Include="CounterSemaphore.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="FoodAndDrinkRequest.h">
+    <ClInclude Include="Client.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="TicketOffice.h">
+      <Filter>Archivos de encabezado\Tickets</Filter>
+    </ClInclude>
+    <ClInclude Include="TicketOfficesScheduler.h">
+      <Filter>Archivos de encabezado\Tickets</Filter>
+    </ClInclude>
+    <ClInclude Include="TicketsRequest.h">
+      <Filter>Archivos de encabezado\Tickets</Filter>
+    </ClInclude>
+    <ClInclude Include="FoodAndDrinkRequest.h">
+      <Filter>Archivos de encabezado\Stands</Filter>
+    </ClInclude>
+    <ClInclude Include="Stand.h">
+      <Filter>Archivos de encabezado\Stands</Filter>
+    </ClInclude>
+    <ClInclude Include="StandsScheduler.h">
+      <Filter>Archivos de encabezado\Stands</Filter>
+    </ClInclude>
     <ClInclude Include="StandStock.h">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de encabezado\Stands</Filter>
+    </ClInclude>
+    <ClInclude Include="Replenishment.h">
+      <Filter>Archivos de encabezado\Replenishment</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplenishmentRequest.h">
+      <Filter>Archivos de encabezado\Replenishment</Filter>
+    </ClInclude>
+    <ClInclude Include="ReplenishmentScheduler.h">
+      <Filter>Archivos de encabezado\Replenishment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -62,17 +104,41 @@
     <ClCompile Include="Utilities.cpp">
       <Filter>Archivos de origen\Libraries</Filter>
     </ClCompile>
-    <ClCompile Include="TicketsRequest.cpp">
-      <Filter>Archivos de origen</Filter>
-    </ClCompile>
     <ClCompile Include="PaymentRequest.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
-    <ClCompile Include="FoodAndDrinkRequest.cpp">
+    <ClCompile Include="Client.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="TicketOffice.cpp">
+      <Filter>Archivos de origen\Tickets</Filter>
+    </ClCompile>
+    <ClCompile Include="TicketOfficesScheduler.cpp">
+      <Filter>Archivos de origen\Tickets</Filter>
+    </ClCompile>
+    <ClCompile Include="TicketsRequest.cpp">
+      <Filter>Archivos de origen\Tickets</Filter>
+    </ClCompile>
+    <ClCompile Include="FoodAndDrinkRequest.cpp">
+      <Filter>Archivos de origen\Stands</Filter>
+    </ClCompile>
+    <ClCompile Include="Stand.cpp">
+      <Filter>Archivos de origen\Stands</Filter>
+    </ClCompile>
+    <ClCompile Include="StandsScheduler.cpp">
+      <Filter>Archivos de origen\Stands</Filter>
+    </ClCompile>
     <ClCompile Include="StandStock.cpp">
-      <Filter>Archivos de origen</Filter>
+      <Filter>Archivos de origen\Stands</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplenishmentScheduler.cpp">
+      <Filter>Replenishment</Filter>
+    </ClCompile>
+    <ClCompile Include="ReplenishmentRequest.cpp">
+      <Filter>Replenishment</Filter>
+    </ClCompile>
+    <ClCompile Include="Replenishment.cpp">
+      <Filter>Replenishment</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

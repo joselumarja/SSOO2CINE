@@ -9,7 +9,6 @@ public:
 	CounterSemaphore() 
 	{
 		Count = 0;
-		WaitingMutex.lock();
 	}
 
 	inline CounterSemaphore(int Count)
@@ -22,8 +21,6 @@ public:
 		this->Count = Count;
 	}
 
-	~CounterSemaphore() {};
-
 	inline void notify()
 	{
 		Mutex.lock();
@@ -31,6 +28,7 @@ public:
 		{
 			Mutex.unlock();
 			WaitingMutex.unlock();
+			Mutex.lock();
 		}
 
 		Mutex.unlock();
@@ -43,6 +41,7 @@ public:
 		{
 			Mutex.unlock();
 			WaitingMutex.lock();
+			Mutex.lock();
 		}
 		Mutex.unlock();
 	}
