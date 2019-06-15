@@ -1,9 +1,30 @@
 #include "pch.h"
-#include <queue>
+#include "PaymentGateway.h"
 
-
-bool pay(float Money)
+PaymentGateway::PaymentGateway(std::priority_queue<PaymentPriorityRequest>* PaymentPriorityRequestQueue, std::mutex * PaymentPriorityRequestQueueMutex)
 {
-	Takings += Money;
-	return true;
+	this->PaymentPriorityRequestQueue = PaymentPriorityRequestQueue;
+	this->PaymentPriorityRequestQueueMutex = PaymentPriorityRequestQueueMutex;
+}
+
+PaymentGateway::~PaymentGateway()
+{
+}
+
+void PaymentGateway::operator()()
+{
+	PaymentPriorityRequest PayRequest;
+
+	while (true)
+	{
+		std::unique_lock<std::mutex> PaymentRequestAvailableLock(PaymentRequestAvailableMutex);
+		cvPaymentRequestAvailable.wait(PaymentRequestAvailableLock, [this] {return !PaymentPriorityRequestQueue->empty(); });
+
+		std::lock_guard<std::mutex> PaymentPriorityRequestQueueLock(*PaymentPriorityRequestQueueMutex);
+		PayRequest = PaymentPriorityRequestQueue->top();
+		PaymentPriorityRequestQueue->pop();
+		PaymentPriorityRequestQueueLock.~lock_guard();
+
+		PayRequest.getPaymentRequest().notifyPaymentAccepted();
+	}
 }

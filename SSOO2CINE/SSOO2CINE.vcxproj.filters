@@ -37,6 +37,12 @@
     <Filter Include="Archivos de encabezado\Replenishment">
       <UniqueIdentifier>{2653e775-0f5e-4870-a37b-058c67e28dee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de encabezado\PaymentPlatform">
+      <UniqueIdentifier>{ac75eefd-3491-48bd-955f-ab8fc5d45a57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\PaymentPlatform">
+      <UniqueIdentifier>{482eb60e-6d91-4979-8426-5b378fa10d6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -45,14 +51,8 @@
     <ClInclude Include="PrintColorText.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="Utilities.h">
-      <Filter>Archivos de encabezado\Libraries</Filter>
-    </ClInclude>
     <ClInclude Include="Definitions.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
-    </ClInclude>
-    <ClInclude Include="PaymentRequest.h">
-      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="CounterSemaphore.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
@@ -78,9 +78,6 @@
     <ClInclude Include="StandsScheduler.h">
       <Filter>Archivos de encabezado\Stands</Filter>
     </ClInclude>
-    <ClInclude Include="StandStock.h">
-      <Filter>Archivos de encabezado\Stands</Filter>
-    </ClInclude>
     <ClInclude Include="Replenishment.h">
       <Filter>Archivos de encabezado\Replenishment</Filter>
     </ClInclude>
@@ -89,6 +86,21 @@
     </ClInclude>
     <ClInclude Include="ReplenishmentScheduler.h">
       <Filter>Archivos de encabezado\Replenishment</Filter>
+    </ClInclude>
+    <ClInclude Include="PaymentGateway.h">
+      <Filter>Archivos de encabezado\PaymentPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="PaymentRequest.h">
+      <Filter>Archivos de encabezado\PaymentPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="PaymentScheduler.h">
+      <Filter>Archivos de encabezado\PaymentPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="PaymentPriorityRequest.h">
+      <Filter>Archivos de encabezado\PaymentPlatform</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeNode.h">
+      <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,12 +112,6 @@
     </ClCompile>
     <ClCompile Include="PrintColorText.cpp">
       <Filter>Archivos de origen\Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities.cpp">
-      <Filter>Archivos de origen\Libraries</Filter>
-    </ClCompile>
-    <ClCompile Include="PaymentRequest.cpp">
-      <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>Archivos de origen</Filter>
@@ -128,9 +134,6 @@
     <ClCompile Include="StandsScheduler.cpp">
       <Filter>Archivos de origen\Stands</Filter>
     </ClCompile>
-    <ClCompile Include="StandStock.cpp">
-      <Filter>Archivos de origen\Stands</Filter>
-    </ClCompile>
     <ClCompile Include="ReplenishmentScheduler.cpp">
       <Filter>Replenishment</Filter>
     </ClCompile>
@@ -139,6 +142,21 @@
     </ClCompile>
     <ClCompile Include="Replenishment.cpp">
       <Filter>Replenishment</Filter>
+    </ClCompile>
+    <ClCompile Include="PaymentGateway.cpp">
+      <Filter>Archivos de origen\PaymentPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="PaymentRequest.cpp">
+      <Filter>Archivos de origen\PaymentPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="PaymentScheduler.cpp">
+      <Filter>Archivos de origen\PaymentPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="PaymentPriorityRequest.cpp">
+      <Filter>Archivos de origen\PaymentPlatform</Filter>
+    </ClCompile>
+    <ClCompile Include="TradeNode.cpp">
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,13 +1,19 @@
 #include "pch.h"
 #include "Stand.h"
 
-Stand::Stand(int StandId, std::queue<int>* ReadyFoodStands, std::mutex * StandsOperationMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentRequestQueueMutex):IsRefilledStand(false),PopcorAmount(MAX_POPCORN_AMOUNT),DrinksAmount(MAX_DRINKS_AMOUNT)
+Stand::Stand(int StandId, std::queue<int>* ReadyFoodStands, std::mutex * StandsOperationMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentRequestQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex)
 {
 	this->StandId = StandId;
 	this->ReadyFoodStands = ReadyFoodStands;
 	this->StandsOperationMutex = StandsOperationMutex;
 	this->ReplenishmentRequestQueue = ReplenishmentRequestQueue;
 	this->ReplenishmentRequestQueueMutex = ReplenishmentRequestQueueMutex;
+	this->PaymentRequestQueue = PaymentRequestQueue;
+	this->PaymentRequestQueueMutex = PaymentRequestQueueMutex;
+	IsRefilledStand = false;
+	PaymentAccomplished = false;
+	PopcorAmount = MAX_POPCORN_AMOUNT;
+	DrinksAmount=MAX_DRINKS_AMOUNT;
 }
 
 Stand::~Stand()
@@ -40,10 +46,17 @@ void Stand::operator()()
 			IsRefilledStand = false;
 		}
 
-		//A PAGAR
+		PaymentRequest PayRequest = PaymentRequest(RequestOrigin::FoodAndDrink, (TradeNode*)this,(double) Request.getNumberOfDrinks()*DRINK_PRICE+Request.getNumberOfPopcorns()*POPCORN_PRICE);
+		std::lock_guard<std::mutex> PaymentRequestQueueLock(*PaymentRequestQueueMutex);
+		PaymentRequestQueue->push(PayRequest);
+		PaymentRequestQueueLock.~lock_guard();
+
+		std::unique_lock<std::mutex> PaymentAccomplishedLock(PaymentAccomplishedMutex);
+		cvPaymentAccomplished.wait(PaymentAccomplishedLock, [this] {return PaymentAccomplished; });
 		DrinksAmount -= Request.getNumberOfDrinks();
 		PopcorAmount -= Request.getNumberOfPopcorns();
 		Request.RequestCompleted();
+		PaymentAccomplished = false;
 
 		std::lock_guard<std::mutex> StandsOperationLock(*StandsOperationMutex);
 		ReadyFoodStands->push(StandId);
@@ -69,4 +82,9 @@ void Stand::RefillDrinks(int DrinksAmount)
 void Stand::RefilledStand()
 {
 	IsRefilledStand = true;
+}
+
+void Stand::PayAccomplished()
+{
+	PaymentAccomplished = true;
 }

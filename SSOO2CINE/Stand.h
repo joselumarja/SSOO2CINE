@@ -6,17 +6,23 @@
 #include "FoodAndDrinkRequest.h"
 #include "ReplenishmentRequest.h"
 #include "Definitions.h"
+#include "TradeNode.h"
+#include "PaymentRequest.h"
 
-class Stand
+class Stand : public TradeNode
 {
 public:
-	Stand(int StandId, std::queue<int> *ReadyFoodStands, std::mutex *StandsOperationMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentQueueMutex);
+	Stand(int StandId, std::queue<int> *ReadyFoodStands, std::mutex *StandsOperationMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex);
 	~Stand();
 	void operator()();
+
 	void addRequest(FoodAndDrinkRequest FoodDrinkRequest);
+
 	void RefillPopcorn(int PopcornAmount);
 	void RefillDrinks(int DrinksAmount);
 	void RefilledStand();
+
+	void PayAccomplished();
 
 private:
 	int StandId;
@@ -33,10 +39,17 @@ private:
 	std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue;
 	std::mutex *ReplenishmentRequestQueueMutex;
 
+	std::queue<PaymentRequest> *PaymentRequestQueue;
+	std::mutex *PaymentRequestQueueMutex;
+
 	std::mutex FoodOperationAvailableMutex;
 	std::condition_variable cvFoodOperationAvailable;
 
 	std::condition_variable cvReplenishOperationCompleted;
 	std::mutex ReplenishOperationCompletedMutex;
+
+	bool PaymentAccomplished;
+	std::condition_variable cvPaymentAccomplished;
+	std::mutex PaymentAccomplishedMutex;
 };
 

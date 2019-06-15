@@ -1,7 +1,7 @@
 #pragma once
-#include <chrono>
-
 #include "Definitions.h"
+
+class TradeNode;
 
 enum class RequestOrigin
 {
@@ -9,35 +9,28 @@ enum class RequestOrigin
 	FoodAndDrink
 };
 
-/*class MorePriority
-{
-public:
-	bool operator()(const PaymentRequest &lhs, const PaymentRequest &rhs) const
-	{
-		return &lhs < &rhs;
-	}
-};*/
-
-//bool operator<(const PaymentRequest & PR1, const PaymentRequest & PR2);
-
 class PaymentRequest
 {
 public:
 	PaymentRequest();
-	PaymentRequest(RequestOrigin Origin, float Money);
-	PaymentRequest(RequestOrigin Origin, unsigned char StandNumber, float Money);
+	PaymentRequest(RequestOrigin Origin,TradeNode *TradeOrigin, double Money);
 	~PaymentRequest();
-	const bool operator<(const PaymentRequest & PR);
-	const RequestOrigin getOrigin();
-	const unsigned char getStandNumber();
-	const float getMoney();
-	const __time64_t getTime();
+
+	void notifyPaymentAccepted();
+
+	inline const RequestOrigin getOrigin()
+	{
+		return Origin;
+	}
+	inline const double getMoney()
+	{
+		return Money;
+	}
 	
 private:
-	__time64_t TimeStamp;
 	RequestOrigin Origin;
-	unsigned char StandNumber;
-	float Money;
+	TradeNode *TradeOrigin;
+	double Money;
 
 };
 
