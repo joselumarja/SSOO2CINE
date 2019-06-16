@@ -24,15 +24,22 @@ void Stand::operator()()
 {
 	FoodAndDrinkRequest Request;
 
+	std::mutex FoodOperationAvailableMutex;
+	std::condition_variable cvFoodOperationAvailable;
+
+	std::condition_variable cvReplenishOperationCompleted;
+	std::mutex ReplenishOperationCompletedMutex;
+
+	std::condition_variable cvPaymentAccomplished;
+	std::mutex PaymentAccomplishedMutex;
+
 	while (true)
 	{
 		std::unique_lock<std::mutex> FoodOperationAvailableLock(FoodOperationAvailableMutex);
 		cvFoodOperationAvailable.wait(FoodOperationAvailableLock, [this] {return !FoodAndDrinkRequests.empty(); });
 
-		std::lock_guard<std::mutex> lk(RequestsOperationMutex);
 		Request = FoodAndDrinkRequests.front();
 		FoodAndDrinkRequests.pop();
-		lk.~lock_guard();
 
 		if (Request.getNumberOfDrinks() > DrinksAmount || Request.getNumberOfPopcorns() > PopcorAmount)
 		{
@@ -65,7 +72,6 @@ void Stand::operator()()
 
 void Stand::addRequest(FoodAndDrinkRequest FoodDrinkRequest)
 {
-	std::lock_guard<std::mutex> lk(RequestsOperationMutex);
 	FoodAndDrinkRequests.push(FoodDrinkRequest);
 }
 

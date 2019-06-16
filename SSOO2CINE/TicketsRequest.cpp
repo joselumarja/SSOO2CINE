@@ -6,7 +6,7 @@ TicketsRequest::TicketsRequest()
 {
 }
 
-TicketsRequest::TicketsRequest(Client *ClientId, unsigned char NumberOfSeats)
+TicketsRequest::TicketsRequest(Client *ClientId, unsigned short NumberOfSeats)
 {
 	this->ClientId = ClientId;
 	this->NumberOfSeats = NumberOfSeats;

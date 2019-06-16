@@ -7,7 +7,7 @@ FoodAndDrinkRequest::FoodAndDrinkRequest()
 {
 }
 
-FoodAndDrinkRequest::FoodAndDrinkRequest(Client *ClientId, unsigned char NumberOfPopcorns, unsigned char NumberOfDrinks)
+FoodAndDrinkRequest::FoodAndDrinkRequest(Client *ClientId, unsigned short NumberOfPopcorns, unsigned short NumberOfDrinks)
 {
 	this->ClientId = ClientId;
 	this->NumberOfPopcorns = NumberOfPopcorns;

@@ -18,6 +18,9 @@ TicketOfficesScheduler::~TicketOfficesScheduler()
 
 void TicketOfficesScheduler::operator()()
 {
+	std::condition_variable cvAvailableTicketOperation;
+	std::mutex AvailableTicketOperationMutex;
+
 	while (true)
 	{
 		std::unique_lock<std::mutex> AvailableTicketOperationLock(AvailableTicketOperationMutex);

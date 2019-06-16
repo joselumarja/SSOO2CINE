@@ -16,15 +16,16 @@ void Replenishment::operator()()
 {
 	ReplenishmentRequest Request;
 
+	std::mutex ReplenishOperationAvailableMutex;
+	std::condition_variable cvReplenishOperationAvailable;
+
 	while (true)
 	{
 		std::unique_lock<std::mutex> ReplenishmentOperationAvailableLock(*ReplenishmentOperationMutex);
 		cvReplenishOperationAvailable.wait(ReplenishmentOperationAvailableLock, [this] {return !ReplenishRequests.empty(); });
 
-		std::lock_guard<std::mutex> lk(RequestsOperationMutex);
 		Request = ReplenishRequests.front();
 		ReplenishRequests.pop();
-		lk.~lock_guard();
 
 		Request.Replenish(MAX_POPCORN_AMOUNT, MAX_DRINKS_AMOUNT);
 
@@ -35,6 +36,5 @@ void Replenishment::operator()()
 
 void Replenishment::addRequest(ReplenishmentRequest ReplenishRequest)
 {
-	std::lock_guard<std::mutex> lk(RequestsOperationMutex);
 	ReplenishRequests.push(ReplenishRequest);
 }

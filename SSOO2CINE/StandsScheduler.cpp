@@ -16,6 +16,9 @@ StandsScheduler::~StandsScheduler()
 
 void StandsScheduler::operator()()
 {
+	std::condition_variable cvAvailableFoodOperation;
+	std::mutex AvailableFoodOperationMutex;
+
 	while (true)
 	{
 		std::unique_lock<std::mutex> AvailableFoodOperationLock(AvailableFoodOperationMutex);

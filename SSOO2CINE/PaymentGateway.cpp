@@ -15,6 +15,9 @@ void PaymentGateway::operator()()
 {
 	PaymentPriorityRequest PayRequest;
 
+	std::condition_variable cvPaymentRequestAvailable;
+	std::mutex PaymentRequestAvailableMutex;
+
 	while (true)
 	{
 		std::unique_lock<std::mutex> PaymentRequestAvailableLock(PaymentRequestAvailableMutex);

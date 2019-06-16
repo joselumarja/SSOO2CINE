@@ -34,7 +34,6 @@ private:
 	std::mutex *StandsOperationMutex;
 
 	std::queue<FoodAndDrinkRequest> FoodAndDrinkRequests;
-	std::mutex RequestsOperationMutex;
 
 	std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue;
 	std::mutex *ReplenishmentRequestQueueMutex;
@@ -42,14 +41,6 @@ private:
 	std::queue<PaymentRequest> *PaymentRequestQueue;
 	std::mutex *PaymentRequestQueueMutex;
 
-	std::mutex FoodOperationAvailableMutex;
-	std::condition_variable cvFoodOperationAvailable;
-
-	std::condition_variable cvReplenishOperationCompleted;
-	std::mutex ReplenishOperationCompletedMutex;
-
 	bool PaymentAccomplished;
-	std::condition_variable cvPaymentAccomplished;
-	std::mutex PaymentAccomplishedMutex;
 };
 

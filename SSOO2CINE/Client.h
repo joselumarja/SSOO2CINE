@@ -9,6 +9,7 @@
 class Client
 {
 public:
+	Client();
 	Client(int ClientId, std::queue<TicketsRequest> *TicketRequestQueue, std::queue<FoodAndDrinkRequest> *FoodAndDrinkRequestQueue, std::mutex *TicketsRequestQueueMutex, std::mutex *FoodAndDrinkRequestQueueMutex);
 	~Client();
 	void setRequests(TicketsRequest TicketRequest, FoodAndDrinkRequest FoodDrinkRequest);
@@ -29,12 +30,6 @@ private:
 
 	std::mutex *TicketsRequestQueueMutex;
 	std::mutex *FoodAndDrinkRequestQueueMutex;
-
-	std::condition_variable cvTicketReadyOperation;
-	std::condition_variable cvFoodAndDrinkReadyOperation;
-
-	std::mutex TicketReadyOperationMutex;
-	std::mutex FoodAndDrinkReadyOperationMutex;
 
 	bool TicketsReadyOperation;
 	bool TicketsAcceptedOperation;

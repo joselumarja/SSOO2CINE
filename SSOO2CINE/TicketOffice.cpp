@@ -22,15 +22,19 @@ void TicketOffice::operator()()
 {
 	TicketsRequest Request;
 
+	std::mutex TicketOperationAvailableMutex;
+	std::condition_variable cvTicketOperationAvailable;
+
+	std::condition_variable cvPaymentAccomplished;
+	std::mutex PaymentAccomplishedMutex;
+
 	while (true)
 	{
 		std::unique_lock<std::mutex> TicketOperationAvailableLock(TicketOperationAvailableMutex);
 		cvTicketOperationAvailable.wait(TicketOperationAvailableLock, [this] {return !TicketsRequests.empty(); });
 
-		std::lock_guard<std::mutex> lkRequests(RequestsOperationMutex);
 		Request = TicketsRequests.front();
 		TicketsRequests.pop();
-		lkRequests.~lock_guard();
 
 		std::lock_guard<std::mutex> lkSeats(*SeatsOperationMutex);
 		if (Request.getNumberOfSeats() + *TakenSeats > NUMBER_OF_SEATS)
@@ -59,11 +63,10 @@ void TicketOffice::operator()()
 
 void TicketOffice::addRequest(TicketsRequest TicketRequest)
 {
-	std::lock_guard<std::mutex> lk(RequestsOperationMutex);
 	TicketsRequests.push(TicketRequest);
 }
 
-void TicketOffice::PayAcomplished()
+void TicketOffice::PayAccomplished()
 {
 	PaymentAccomplished = true;
 }

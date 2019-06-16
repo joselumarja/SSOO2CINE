@@ -6,9 +6,9 @@ class TicketsRequest
 {
 public:
 	TicketsRequest();
-	TicketsRequest(Client *ClientId, unsigned char NumberOfSeats);
+	TicketsRequest(Client *ClientId, unsigned short NumberOfSeats);
 	~TicketsRequest();
-	inline int getNumberOfSeats()
+	inline short getNumberOfSeats()
 	{
 		return NumberOfSeats;
 	}
@@ -18,7 +18,7 @@ public:
 
 private:
 	Client *ClientId;
-	unsigned char NumberOfSeats;
+	unsigned short NumberOfSeats;
 
 };
 

@@ -17,6 +17,10 @@ void PaymentScheduler::operator()()
 {
 	PaymentRequest PayRequest;
 	PaymentPriorityRequest PayPriorityRequest;
+
+	std::condition_variable cvPaymentRequestAvailable;
+	std::mutex PaymentRequestAvailableMutex;
+
 	int PaymentTicketsPriorityCount=0;
 
 	while (true)

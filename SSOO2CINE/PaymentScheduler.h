@@ -20,7 +20,5 @@ private:
 	std::mutex *PaymentRequestQueueMutex;
 	std::mutex *PaymentPriorityRequestQueueMutex;
 
-	std::condition_variable cvPaymentRequestAvailable;
-	std::mutex PaymentRequestAvailableMutex;
 };
 

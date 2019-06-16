@@ -19,5 +19,5 @@ PaymentRequest::~PaymentRequest()
 
 void PaymentRequest::notifyPaymentAccepted()
 {
-	TradeOrigin->PayAcomplished();
+	TradeOrigin->PayAccomplished();
 }

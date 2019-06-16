@@ -4,6 +4,6 @@ class TradeNode
 public:
 	TradeNode();
 	~TradeNode();
-	virtual void PayAcomplished() = 0;
+	virtual void PayAccomplished() = 0;
 };
 

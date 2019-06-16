@@ -2,6 +2,9 @@
 #include "Client.h"
 
 
+Client::Client()
+{
+}
 
 Client::Client(int ClientId, std::queue<TicketsRequest> *TicketRequestQueue, std::queue<FoodAndDrinkRequest> *FoodAndDrinkRequestQueue, std::mutex *TicketsRequestQueueMutex, std::mutex *FoodAndDrinkRequestQueueMutex)
 {
@@ -45,6 +48,11 @@ void Client::acceptFoodAndDrinkRequest()
 
 void Client::operator()()
 {
+	std::condition_variable cvTicketReadyOperation;
+	std::condition_variable cvFoodAndDrinkReadyOperation;
+	std::mutex TicketReadyOperationMutex;
+	std::mutex FoodAndDrinkReadyOperationMutex;
+
 	std::lock_guard<std::mutex> TicketsRequestQueueLock(*TicketsRequestQueueMutex);
 	TicketRequestQueue->push(TicketRequest);
 	TicketsRequestQueueLock.~lock_guard();
@@ -54,7 +62,6 @@ void Client::operator()()
 
 	if (!TicketsAcceptedOperation)
 	{
-
 		return;
 	}
 

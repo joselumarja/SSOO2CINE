@@ -19,7 +19,5 @@ private:
 	std::mutex *StandsOperationMutex;
 	std::mutex *FoodAndDrinkRequestQueueMutex;
 
-	std::condition_variable cvAvailableFoodOperation;
-	std::mutex AvailableFoodOperationMutex;
 };
 

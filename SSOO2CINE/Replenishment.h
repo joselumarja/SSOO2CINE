@@ -21,9 +21,5 @@ private:
 	std::mutex *ReplenishmentOperationMutex;
 
 	std::queue<ReplenishmentRequest> ReplenishRequests;
-	std::mutex RequestsOperationMutex;
-
-	std::mutex ReplenishOperationAvailableMutex;
-	std::condition_variable cvReplenishOperationAvailable;
 };
 

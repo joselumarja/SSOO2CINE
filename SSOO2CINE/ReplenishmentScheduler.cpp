@@ -16,6 +16,9 @@ ReplenishmentScheduler::~ReplenishmentScheduler()
 
 void ReplenishmentScheduler::operator()()
 {
+	std::condition_variable cvAvailableReplenishmentOperation;
+	std::mutex AvailableReplenishmentOperationMutex;
+
 	while (true)
 	{
 		std::unique_lock<std::mutex> AvailableReplenishmentOperationLock(AvailableReplenishmentOperationMutex);

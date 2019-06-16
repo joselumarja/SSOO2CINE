@@ -19,8 +19,5 @@ private:
 	std::mutex *TicketOfficesOperationMutex;
 	std::mutex *TicketsRequestQueueMutex;
 
-	std::condition_variable cvAvailableTicketOperation;
-
-	std::mutex AvailableTicketOperationMutex;
 };
 

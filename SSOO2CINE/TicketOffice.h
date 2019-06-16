@@ -17,7 +17,7 @@ public:
 
 	void addRequest(TicketsRequest TicketRequest);
 
-	void PayAcomplished();
+	void PayAccomplished();
 
 private:
 	int OfficeId;
@@ -28,17 +28,11 @@ private:
 	int *TakenSeats;
 	std::mutex *SeatsOperationMutex;
 
-	std::queue<TicketsRequest> TicketsRequests;
-	std::mutex RequestsOperationMutex;
-
-	std::mutex TicketOperationAvailableMutex;
-	std::condition_variable cvTicketOperationAvailable;
-
 	std::queue<PaymentRequest> *PaymentRequestQueue;
 	std::mutex *PaymentRequestQueueMutex;
 
+	std::queue<TicketsRequest> TicketsRequests;
+
 	bool PaymentAccomplished;
-	std::condition_variable cvPaymentAccomplished;
-	std::mutex PaymentAccomplishedMutex;
 };
 

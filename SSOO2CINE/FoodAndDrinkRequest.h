@@ -6,14 +6,14 @@ class FoodAndDrinkRequest
 {
 public:
 	FoodAndDrinkRequest();
-	FoodAndDrinkRequest(Client *ClientId, unsigned char NumberOfPopcorns, unsigned char NumberOfDrinks);
+	FoodAndDrinkRequest(Client *ClientId, unsigned short NumberOfPopcorns, unsigned short NumberOfDrinks);
 	~FoodAndDrinkRequest();
 
-	inline unsigned char getNumberOfDrinks()
+	inline unsigned short getNumberOfDrinks()
 	{
 		return NumberOfDrinks;
 	}
-	inline unsigned char getNumberOfPopcorns()
+	inline unsigned short getNumberOfPopcorns()
 	{
 		return NumberOfPopcorns;
 	}
@@ -22,7 +22,7 @@ public:
 
 private:
 	Client *ClientId;
-	unsigned char NumberOfPopcorns;
-	unsigned char NumberOfDrinks;
+	unsigned short NumberOfPopcorns;
+	unsigned short NumberOfDrinks;
 };
 
