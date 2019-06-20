@@ -6,7 +6,7 @@ class FoodAndDrinkRequest
 {
 public:
 	FoodAndDrinkRequest();
-	FoodAndDrinkRequest(Client *ClientId, unsigned short NumberOfPopcorns, unsigned short NumberOfDrinks);
+	FoodAndDrinkRequest(unsigned short NumberOfPopcorns, unsigned short NumberOfDrinks);
 	~FoodAndDrinkRequest();
 
 	inline unsigned short getNumberOfDrinks()
@@ -17,6 +17,10 @@ public:
 	{
 		return NumberOfPopcorns;
 	}
+
+	void setClientPointer(Client *client);
+
+	std::string getClientInfo();
 
 	void RequestCompleted();
 

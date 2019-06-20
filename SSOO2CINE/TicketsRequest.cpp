@@ -6,14 +6,18 @@ TicketsRequest::TicketsRequest()
 {
 }
 
-TicketsRequest::TicketsRequest(Client *ClientId, unsigned short NumberOfSeats)
+TicketsRequest::TicketsRequest(unsigned short NumberOfSeats)
 {
-	this->ClientId = ClientId;
 	this->NumberOfSeats = NumberOfSeats;
 }
 
 TicketsRequest::~TicketsRequest()
 {
+}
+
+void TicketsRequest::setClientPointer(Client * client)
+{
+	this->ClientId = client;
 }
 
 void TicketsRequest::AcceptOperation()
@@ -24,4 +28,9 @@ void TicketsRequest::AcceptOperation()
 void TicketsRequest::DenyOperation()
 {
 	ClientId->denyTicketRequest();
+}
+
+std::string TicketsRequest::getClientInfo()
+{
+	return std::to_string(ClientId->getClientId());
 }

@@ -1,18 +1,29 @@
+#include <string>
+#include <chrono>
+#include <math.h>
+
 #include "pch.h"
 #include "Client.h"
-
+#include "termcolor.h"
 
 Client::Client()
 {
 }
 
-Client::Client(int ClientId, std::queue<TicketsRequest> *TicketRequestQueue, std::queue<FoodAndDrinkRequest> *FoodAndDrinkRequestQueue, std::mutex *TicketsRequestQueueMutex, std::mutex *FoodAndDrinkRequestQueueMutex)
+Client::Client(int ClientId, TicketsRequest TicketRequest, FoodAndDrinkRequest FoodDrinkRequest, std::condition_variable *cvTicketOfficeTurn, std::condition_variable *cvTicketOfficeResponse, std::condition_variable *cvFoodStandTurn, std::condition_variable *cvFoodStandResponse, std::queue<TicketsRequest> *TicketRequestQueue, std::queue<FoodAndDrinkRequest> *FoodAndDrinkRequestQueue, std::mutex *TicketsRequestQueueMutex, std::mutex *FoodAndDrinkRequestQueueMutex, std::mutex *PrintMutex)
 {
 	this->ClientId = ClientId;
+	this->TicketRequest = TicketRequest;
+	this->FoodDrinkRequest = FoodDrinkRequest;
+	this->cvFoodStandTurn = cvFoodStandTurn;
+	this->cvFoodStandResponse = cvFoodStandResponse;
+	this->cvTicketOfficeTurn = cvTicketOfficeTurn;
+	this->cvTicketOfficeResponse = cvTicketOfficeResponse;
 	this->TicketRequestQueue = TicketRequestQueue;
 	this->FoodAndDrinkRequestQueue = FoodAndDrinkRequestQueue;
 	this->TicketsRequestQueueMutex = TicketsRequestQueueMutex;
 	this->FoodAndDrinkRequestQueueMutex = FoodAndDrinkRequestQueueMutex;
+	this->PrintMutex = PrintMutex;
 	TicketsReadyOperation = false;
 	TicketsAcceptedOperation = false;
 	FoodAndDrinkReadyOperation = false;
@@ -23,10 +34,10 @@ Client::~Client()
 {
 }
 
-void Client::setRequests(TicketsRequest TicketRequest, FoodAndDrinkRequest FoodDrinkRequest)
+void Client::setClientPointer()
 {
-	this->TicketRequest = TicketRequest;
-	this->FoodDrinkRequest = FoodDrinkRequest;
+	this->TicketRequest.setClientPointer((Client*)this);
+	this->FoodDrinkRequest.setClientPointer((Client*)this);
 }
 
 void Client::acceptTicketRequest()
@@ -48,28 +59,50 @@ void Client::acceptFoodAndDrinkRequest()
 
 void Client::operator()()
 {
-	std::condition_variable cvTicketReadyOperation;
-	std::condition_variable cvFoodAndDrinkReadyOperation;
+	setClientPointer();
+	std::unique_lock<std::mutex> PrintLock(*PrintMutex);
+	PrintLock.unlock();
+
 	std::mutex TicketReadyOperationMutex;
 	std::mutex FoodAndDrinkReadyOperationMutex;
 
-	std::lock_guard<std::mutex> TicketsRequestQueueLock(*TicketsRequestQueueMutex);
+	PrintLock.lock();
+	std::cout << termcolor::green << "[CLIENT " << std::to_string(ClientId) << "] Waiting in Ticket Queue" << termcolor::reset << std::endl;
+	PrintLock.unlock();
+
+	std::unique_lock<std::mutex> TicketsRequestQueueLock(*TicketsRequestQueueMutex);
 	TicketRequestQueue->push(TicketRequest);
-	TicketsRequestQueueLock.~lock_guard();
+	TicketsRequestQueueLock.unlock();
+
+	cvTicketOfficeTurn->notify_one();
 
 	std::unique_lock<std::mutex> TicketReadyOperationLock(TicketReadyOperationMutex);
-	cvTicketReadyOperation.wait(TicketReadyOperationLock, [this] {return TicketsReadyOperation; });
+	cvTicketOfficeResponse->wait(TicketReadyOperationLock, [this] {return TicketsReadyOperation; });
 
 	if (!TicketsAcceptedOperation)
 	{
+		PrintLock.lock();
+		std::cout << termcolor::green << "[CLIENT " << std::to_string(ClientId) << "] Ticket Request Denied" << termcolor::reset << std::endl;
+		PrintLock.unlock();
 		return;
 	}
 
-	std::lock_guard<std::mutex> FoodAndDrinkRequestQueueLock(*FoodAndDrinkRequestQueueMutex);
+	std::this_thread::sleep_for(std::chrono::seconds((rand() % 10) + 5));
+
+	std::unique_lock<std::mutex> FoodAndDrinkRequestQueueLock(*FoodAndDrinkRequestQueueMutex);
 	FoodAndDrinkRequestQueue->push(FoodDrinkRequest);
-	FoodAndDrinkRequestQueueLock.~lock_guard();
+	FoodAndDrinkRequestQueueLock.unlock();
+
+	cvFoodStandTurn->notify_one();
+
+	PrintLock.lock();
+	std::cout << termcolor::green << "[CLIENT " << std::to_string(ClientId) << "] Waiting in Stand Queue" << termcolor::reset << std::endl;
+	PrintLock.unlock();
 
 	std::unique_lock<std::mutex> FoodAndDrinkReadyOperationLock(FoodAndDrinkReadyOperationMutex);
-	cvFoodAndDrinkReadyOperation.wait(FoodAndDrinkReadyOperationLock, [this] {return FoodAndDrinkReadyOperation; });
+	cvFoodStandResponse->wait(FoodAndDrinkReadyOperationLock, [this] {return FoodAndDrinkReadyOperation; });
 
+	PrintLock.lock();
+	std::cout << termcolor::green << "[CLIENT " << std::to_string(ClientId) << "] Inside Cinema" << termcolor::reset << std::endl;
+	PrintLock.unlock();
 }

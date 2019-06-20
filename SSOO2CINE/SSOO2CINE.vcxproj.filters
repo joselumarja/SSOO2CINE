@@ -31,9 +31,6 @@
     <Filter Include="Archivos de origen\Stands">
       <UniqueIdentifier>{d51d3428-8df8-449d-b75d-cd8f55cf5491}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Replenishment">
-      <UniqueIdentifier>{0edd9dd9-5119-4691-ab4a-feb9eaab8396}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Replenishment">
       <UniqueIdentifier>{2653e775-0f5e-4870-a37b-058c67e28dee}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,9 @@
     </Filter>
     <Filter Include="Archivos de origen\PaymentPlatform">
       <UniqueIdentifier>{482eb60e-6d91-4979-8426-5b378fa10d6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de origen\Replenishment">
+      <UniqueIdentifier>{0edd9dd9-5119-4691-ab4a-feb9eaab8396}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,16 +54,10 @@
     <ClInclude Include="Definitions.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
-    <ClInclude Include="CounterSemaphore.h">
-      <Filter>Archivos de encabezado\Libraries</Filter>
-    </ClInclude>
     <ClInclude Include="Client.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="TicketOffice.h">
-      <Filter>Archivos de encabezado\Tickets</Filter>
-    </ClInclude>
-    <ClInclude Include="TicketOfficesScheduler.h">
       <Filter>Archivos de encabezado\Tickets</Filter>
     </ClInclude>
     <ClInclude Include="TicketsRequest.h">
@@ -75,16 +69,10 @@
     <ClInclude Include="Stand.h">
       <Filter>Archivos de encabezado\Stands</Filter>
     </ClInclude>
-    <ClInclude Include="StandsScheduler.h">
-      <Filter>Archivos de encabezado\Stands</Filter>
-    </ClInclude>
     <ClInclude Include="Replenishment.h">
       <Filter>Archivos de encabezado\Replenishment</Filter>
     </ClInclude>
     <ClInclude Include="ReplenishmentRequest.h">
-      <Filter>Archivos de encabezado\Replenishment</Filter>
-    </ClInclude>
-    <ClInclude Include="ReplenishmentScheduler.h">
       <Filter>Archivos de encabezado\Replenishment</Filter>
     </ClInclude>
     <ClInclude Include="PaymentGateway.h">
@@ -101,6 +89,9 @@
     </ClInclude>
     <ClInclude Include="TradeNode.h">
       <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="termcolor.h">
+      <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +110,6 @@
     <ClCompile Include="TicketOffice.cpp">
       <Filter>Archivos de origen\Tickets</Filter>
     </ClCompile>
-    <ClCompile Include="TicketOfficesScheduler.cpp">
-      <Filter>Archivos de origen\Tickets</Filter>
-    </ClCompile>
     <ClCompile Include="TicketsRequest.cpp">
       <Filter>Archivos de origen\Tickets</Filter>
     </ClCompile>
@@ -131,17 +119,11 @@
     <ClCompile Include="Stand.cpp">
       <Filter>Archivos de origen\Stands</Filter>
     </ClCompile>
-    <ClCompile Include="StandsScheduler.cpp">
-      <Filter>Archivos de origen\Stands</Filter>
-    </ClCompile>
-    <ClCompile Include="ReplenishmentScheduler.cpp">
-      <Filter>Replenishment</Filter>
-    </ClCompile>
     <ClCompile Include="ReplenishmentRequest.cpp">
-      <Filter>Replenishment</Filter>
+      <Filter>Archivos de origen\Replenishment</Filter>
     </ClCompile>
     <ClCompile Include="Replenishment.cpp">
-      <Filter>Replenishment</Filter>
+      <Filter>Archivos de origen\Replenishment</Filter>
     </ClCompile>
     <ClCompile Include="PaymentGateway.cpp">
       <Filter>Archivos de origen\PaymentPlatform</Filter>

@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "Definitions.h"
 
 class TradeNode;
@@ -26,6 +28,8 @@ public:
 	{
 		return Money;
 	}
+
+	std::string getOriginInfo();
 	
 private:
 	RequestOrigin Origin;

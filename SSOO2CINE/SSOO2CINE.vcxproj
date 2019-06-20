@@ -152,9 +152,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
-    <ClInclude Include="CounterSemaphore.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="FoodAndDrinkRequest.h" />
+    <ClInclude Include="termcolor.h" />
     <ClInclude Include="PaymentGateway.h" />
     <ClInclude Include="PaymentPriorityRequest.h" />
     <ClInclude Include="PaymentRequest.h" />
@@ -163,11 +163,8 @@
     <ClInclude Include="PrintColorText.h" />
     <ClInclude Include="Replenishment.h" />
     <ClInclude Include="ReplenishmentRequest.h" />
-    <ClInclude Include="ReplenishmentScheduler.h" />
     <ClInclude Include="Stand.h" />
-    <ClInclude Include="StandsScheduler.h" />
     <ClInclude Include="TicketOffice.h" />
-    <ClInclude Include="TicketOfficesScheduler.h" />
     <ClInclude Include="TicketsRequest.h" />
     <ClInclude Include="TradeNode.h" />
   </ItemGroup>
@@ -187,12 +184,9 @@
     <ClCompile Include="PrintColorText.cpp" />
     <ClCompile Include="Replenishment.cpp" />
     <ClCompile Include="ReplenishmentRequest.cpp" />
-    <ClCompile Include="ReplenishmentScheduler.cpp" />
     <ClCompile Include="SSOO2CINE.cpp" />
     <ClCompile Include="Stand.cpp" />
-    <ClCompile Include="StandsScheduler.cpp" />
     <ClCompile Include="TicketOffice.cpp" />
-    <ClCompile Include="TicketOfficesScheduler.cpp" />
     <ClCompile Include="TicketsRequest.cpp" />
     <ClCompile Include="TradeNode.cpp" />
   </ItemGroup>

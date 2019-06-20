@@ -9,11 +9,15 @@
 class PaymentScheduler
 {
 public:
-	PaymentScheduler(std::queue<PaymentRequest> *PaymentRequestQueue, std::priority_queue<PaymentPriorityRequest> *PaymentPriorityRequestQueue, std::mutex *PaymentRequestQueueMutex, std::mutex *PaymentPriorityRequestQueueMutex);
+	PaymentScheduler(std::condition_variable *cvPayTurn, std::condition_variable *cvPayAvailable, std::queue<PaymentRequest> *PaymentRequestQueue, std::priority_queue<PaymentPriorityRequest> *PaymentPriorityRequestQueue, std::mutex *PaymentRequestQueueMutex, std::mutex *PaymentPriorityRequestQueueMutex);
 	~PaymentScheduler();
 	void operator()();
 
 private:
+
+	std::condition_variable *cvPayTurn;
+	std::condition_variable *cvPayAvailable;
+
 	std::queue<PaymentRequest> *PaymentRequestQueue;
 	std::priority_queue<PaymentPriorityRequest> *PaymentPriorityRequestQueue;
 

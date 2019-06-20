@@ -2,6 +2,7 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+#include <string>
 
 #include "TicketsRequest.h"
 #include "Definitions.h"
@@ -11,27 +12,33 @@
 class TicketOffice:public TradeNode
 {
 public:
-	TicketOffice(int OfficeId, std::queue<int> *ReadyTicketOffices, std::mutex *TicketOfficesOperationMutex, int *TakenSeats, std::mutex *SeatsOperationMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex);
+	TicketOffice(int OfficeId, std::condition_variable *cvTicketOfficeTurn, std::condition_variable *cvTicketOfficeResponse, std::condition_variable *cvPayTurn, std::condition_variable *cvPayResponse, std::queue<TicketsRequest> *TicketsRequestQueue, std::mutex *TicketsRequestQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex, int *TakenSeats, std::mutex *SeatsOperationMutex, std::mutex *PrintMutex);
 	~TicketOffice();
 	void operator()();
 
-	void addRequest(TicketsRequest TicketRequest);
+	std::string getInfo();
 
 	void PayAccomplished();
 
 private:
 	int OfficeId;
 
-	std::queue<int> *ReadyTicketOffices;
-	std::mutex *TicketOfficesOperationMutex;
+	std::condition_variable *cvTicketOfficeTurn;
+	std::condition_variable *cvTicketOfficeResponse;
 
-	int *TakenSeats;
-	std::mutex *SeatsOperationMutex;
+	std::condition_variable *cvPayTurn;
+	std::condition_variable *cvPayResponse;
+
+	std::queue<TicketsRequest> *TicketsRequestQueue;
+	std::mutex *TicketsRequestQueueMutex;
 
 	std::queue<PaymentRequest> *PaymentRequestQueue;
 	std::mutex *PaymentRequestQueueMutex;
 
-	std::queue<TicketsRequest> TicketsRequests;
+	int *TakenSeats;
+	std::mutex *SeatsOperationMutex;
+
+	std::mutex *PrintMutex;
 
 	bool PaymentAccomplished;
 };

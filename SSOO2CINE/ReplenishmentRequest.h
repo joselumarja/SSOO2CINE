@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class Stand;
 
@@ -9,6 +10,8 @@ public:
 	ReplenishmentRequest(Stand *StandId);
 	~ReplenishmentRequest();
 	void Replenish(int PopcornAmount, int DrinksAmount);
+
+	std::string getStandInfo();
 
 private:
 	Stand *StandId;

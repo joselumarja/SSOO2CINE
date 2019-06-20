@@ -8,13 +8,18 @@
 class PaymentGateway
 {
 public:
-	PaymentGateway(std::priority_queue<PaymentPriorityRequest> *PaymentPriorityRequestQueue, std::mutex *PaymentPriorityRequestQueueMutex);
+	PaymentGateway(std::condition_variable *cvPayAvailable, std::condition_variable *cvPayResponse, std::priority_queue<PaymentPriorityRequest> *PaymentPriorityRequestQueue, std::mutex *PaymentPriorityRequestQueueMutex, std::mutex *PrintMutex);
 	~PaymentGateway();
 	void operator()();
 
 private:
+
+	std::condition_variable *cvPayAvailable;
+	std::condition_variable *cvPayResponse;
+
 	std::priority_queue<PaymentPriorityRequest> *PaymentPriorityRequestQueue;
 	std::mutex *PaymentPriorityRequestQueueMutex;
 
+	std::mutex *PrintMutex;
 };
 

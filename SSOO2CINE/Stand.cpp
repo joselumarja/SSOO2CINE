@@ -1,15 +1,25 @@
+#include <chrono>
+
 #include "pch.h"
 #include "Stand.h"
+#include "termcolor.h"
 
-Stand::Stand(int StandId, std::queue<int>* ReadyFoodStands, std::mutex * StandsOperationMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentRequestQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex)
+Stand::Stand(int StandId, std::condition_variable *cvFoodStandTurn, std::condition_variable *cvFoodStandResponse, std::condition_variable *cvReplenishmentTurn, std::condition_variable *cvReplenishmentResponse, std::condition_variable *cvPayTurn, std::condition_variable *cvPayResponse, std::queue<FoodAndDrinkRequest> *FoodAndDrinkRequestQueue, std::mutex *FoodAndDrinkRequestQueueMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentRequestQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex, std::mutex *PrintMutex)
 {
 	this->StandId = StandId;
-	this->ReadyFoodStands = ReadyFoodStands;
-	this->StandsOperationMutex = StandsOperationMutex;
+	this->cvFoodStandTurn = cvFoodStandTurn;
+	this->cvFoodStandResponse = cvFoodStandResponse;
+	this->cvReplenishmentTurn = cvReplenishmentTurn;
+	this->cvReplenishmentResponse = cvReplenishmentResponse;
+	this->cvPayTurn = cvPayTurn;
+	this->cvPayResponse = cvPayResponse;
+	this->FoodAndDrinkRequestQueue = FoodAndDrinkRequestQueue;
+	this->FoodAndDrinkRequestQueueMutex = FoodAndDrinkRequestQueueMutex;
 	this->ReplenishmentRequestQueue = ReplenishmentRequestQueue;
 	this->ReplenishmentRequestQueueMutex = ReplenishmentRequestQueueMutex;
 	this->PaymentRequestQueue = PaymentRequestQueue;
 	this->PaymentRequestQueueMutex = PaymentRequestQueueMutex;
+	this->PrintMutex = PrintMutex;
 	IsRefilledStand = false;
 	PaymentAccomplished = false;
 	PopcorAmount = MAX_POPCORN_AMOUNT;
@@ -25,54 +35,78 @@ void Stand::operator()()
 	FoodAndDrinkRequest Request;
 
 	std::mutex FoodOperationAvailableMutex;
-	std::condition_variable cvFoodOperationAvailable;
-
-	std::condition_variable cvReplenishOperationCompleted;
 	std::mutex ReplenishOperationCompletedMutex;
-
-	std::condition_variable cvPaymentAccomplished;
 	std::mutex PaymentAccomplishedMutex;
+
+	std::unique_lock<std::mutex> PrintLock(*PrintMutex);
+	PrintLock.unlock();
 
 	while (true)
 	{
 		std::unique_lock<std::mutex> FoodOperationAvailableLock(FoodOperationAvailableMutex);
-		cvFoodOperationAvailable.wait(FoodOperationAvailableLock, [this] {return !FoodAndDrinkRequests.empty(); });
+		cvFoodStandTurn->wait(FoodOperationAvailableLock, [this] {return !FoodAndDrinkRequestQueue->empty(); });
 
-		Request = FoodAndDrinkRequests.front();
-		FoodAndDrinkRequests.pop();
+		std::unique_lock<std::mutex> FoodAndDrinkRequestLock(*FoodAndDrinkRequestQueueMutex);
+		Request = FoodAndDrinkRequestQueue->front();
+		FoodAndDrinkRequestQueue->pop();
+		FoodAndDrinkRequestLock.unlock();
+
+		PrintLock.lock();
+		std::cout << termcolor::blue << "[STAND " << std::to_string(StandId) << "] Attending Client: " << Request.getClientInfo() << termcolor::reset << std::endl;
+		PrintLock.unlock();
 
 		if (Request.getNumberOfDrinks() > DrinksAmount || Request.getNumberOfPopcorns() > PopcorAmount)
 		{
+			PrintLock.lock();
+			std::cout << termcolor::yellow << "[STAND " << std::to_string(StandId) << "] Stockout" << termcolor::reset << std::endl;
+			PrintLock.unlock();
+
 			ReplenishmentRequest ReplenishRequest((Stand *) this);
-			std::lock_guard<std::mutex> lk(*ReplenishmentRequestQueueMutex);
+			std::unique_lock<std::mutex> lk(*ReplenishmentRequestQueueMutex);
 			ReplenishmentRequestQueue->push(ReplenishRequest);
-			lk.~lock_guard();
+			lk.unlock();
+
+			cvReplenishmentTurn->notify_one();
 
 			std::unique_lock<std::mutex> ReplenishOperationCompletedLock(ReplenishOperationCompletedMutex);
-			cvReplenishOperationCompleted.wait(ReplenishOperationCompletedLock, [this] {return IsRefilledStand; });
+			cvReplenishmentResponse->wait(ReplenishOperationCompletedLock, [this] {return IsRefilledStand; });
+
+			PrintLock.lock();
+			std::cout << termcolor::yellow << "[STAND " << std::to_string(StandId) << "] Stock Replenish" << termcolor::reset << std::endl;
+			PrintLock.unlock();
+
 			IsRefilledStand = false;
 		}
 
-		PaymentRequest PayRequest = PaymentRequest(RequestOrigin::FoodAndDrink, (TradeNode*)this,(double) Request.getNumberOfDrinks()*DRINK_PRICE+Request.getNumberOfPopcorns()*POPCORN_PRICE);
-		std::lock_guard<std::mutex> PaymentRequestQueueLock(*PaymentRequestQueueMutex);
-		PaymentRequestQueue->push(PayRequest);
-		PaymentRequestQueueLock.~lock_guard();
+		std::this_thread::sleep_for(std::chrono::seconds(Request.getNumberOfDrinks()));
 
+		PaymentRequest PayRequest = PaymentRequest(RequestOrigin::FoodAndDrink, (TradeNode*)this,(double) Request.getNumberOfDrinks()*DRINK_PRICE+Request.getNumberOfPopcorns()*POPCORN_PRICE);
+		std::unique_lock<std::mutex> PaymentRequestQueueLock(*PaymentRequestQueueMutex);
+		PaymentRequestQueue->push(PayRequest);
+		PaymentRequestQueueLock.unlock();
+
+		cvPayTurn->notify_one();
+
+		PrintLock.lock();
+		std::cout << termcolor::blue << "[STAND " << std::to_string(StandId) << "] Sending Payment Request" << termcolor::reset << std::endl;
+		PrintLock.unlock();
+		
 		std::unique_lock<std::mutex> PaymentAccomplishedLock(PaymentAccomplishedMutex);
-		cvPaymentAccomplished.wait(PaymentAccomplishedLock, [this] {return PaymentAccomplished; });
+		cvPayResponse->wait(PaymentAccomplishedLock, [this] {return PaymentAccomplished; });
 		DrinksAmount -= Request.getNumberOfDrinks();
 		PopcorAmount -= Request.getNumberOfPopcorns();
+
+		PrintLock.lock();
+		std::cout << termcolor::blue << "[STAND " << std::to_string(StandId) << "] Client: " << Request.getClientInfo()<<" Attended" << termcolor::reset << std::endl;
+		PrintLock.unlock();
+
 		Request.RequestCompleted();
+
+		cvFoodStandResponse->notify_all();
+
 		PaymentAccomplished = false;
 
-		std::lock_guard<std::mutex> StandsOperationLock(*StandsOperationMutex);
-		ReadyFoodStands->push(StandId);
 	}
-}
-
-void Stand::addRequest(FoodAndDrinkRequest FoodDrinkRequest)
-{
-	FoodAndDrinkRequests.push(FoodDrinkRequest);
 }
 
 void Stand::RefillPopcorn(int PopcornAmount)
@@ -88,6 +122,11 @@ void Stand::RefillDrinks(int DrinksAmount)
 void Stand::RefilledStand()
 {
 	IsRefilledStand = true;
+}
+
+std::string Stand::getInfo()
+{
+	return std::string("Stand "+std::to_string(StandId));
 }
 
 void Stand::PayAccomplished()

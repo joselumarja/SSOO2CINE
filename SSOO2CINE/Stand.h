@@ -2,6 +2,7 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+#include <string>
 
 #include "FoodAndDrinkRequest.h"
 #include "ReplenishmentRequest.h"
@@ -12,15 +13,15 @@
 class Stand : public TradeNode
 {
 public:
-	Stand(int StandId, std::queue<int> *ReadyFoodStands, std::mutex *StandsOperationMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex);
+	Stand(int StandId, std::condition_variable *cvFoodStandTurn, std::condition_variable *cvFoodStandResponse,std::condition_variable *cvReplenishmentTurn,std::condition_variable *cvReplenishmentResponse, std::condition_variable *cvPayTurn, std::condition_variable *cvPayResponse, std::queue<FoodAndDrinkRequest> *FoodAndDrinkRequestQueue, std::mutex *FoodAndDrinkRequestQueueMutex, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentRequestQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex, std::mutex *PrintMutex);
 	~Stand();
 	void operator()();
-
-	void addRequest(FoodAndDrinkRequest FoodDrinkRequest);
 
 	void RefillPopcorn(int PopcornAmount);
 	void RefillDrinks(int DrinksAmount);
 	void RefilledStand();
+
+	std::string getInfo();
 
 	void PayAccomplished();
 
@@ -30,16 +31,23 @@ private:
 	int DrinksAmount;
 	bool IsRefilledStand;
 
-	std::queue<int> *ReadyFoodStands;
-	std::mutex *StandsOperationMutex;
+	std::queue<FoodAndDrinkRequest> *FoodAndDrinkRequestQueue;
+	std::mutex *FoodAndDrinkRequestQueueMutex;
 
-	std::queue<FoodAndDrinkRequest> FoodAndDrinkRequests;
+	std::condition_variable *cvFoodStandTurn;
+	std::condition_variable *cvFoodStandResponse;
+	std::condition_variable *cvReplenishmentTurn;
+	std::condition_variable *cvReplenishmentResponse;
+	std::condition_variable *cvPayTurn;
+	std::condition_variable *cvPayResponse;
 
 	std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue;
 	std::mutex *ReplenishmentRequestQueueMutex;
 
 	std::queue<PaymentRequest> *PaymentRequestQueue;
 	std::mutex *PaymentRequestQueueMutex;
+
+	std::mutex *PrintMutex;
 
 	bool PaymentAccomplished;
 };

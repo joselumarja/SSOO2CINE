@@ -1,15 +1,21 @@
 #include "pch.h"
 #include "TicketOffice.h"
+#include "termcolor.h"
 
-TicketOffice::TicketOffice(int OfficeId, std::queue<int> *ReadyTicketOffices, std::mutex *TicketOfficesOperationMutex, int *TakenSeats, std::mutex *SeatsOperationMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex)
+TicketOffice::TicketOffice(int OfficeId, std::condition_variable *cvTicketOfficeTurn, std::condition_variable *cvTicketOfficeResponse, std::condition_variable *cvPayTurn, std::condition_variable *cvPayResponse, std::queue<TicketsRequest> *TicketsRequestQueue, std::mutex *TicketsRequestQueueMutex, std::queue<PaymentRequest> *PaymentRequestQueue, std::mutex *PaymentRequestQueueMutex, int *TakenSeats, std::mutex *SeatsOperationMutex, std::mutex *PrintMutex)
 {
 	this->OfficeId = OfficeId;
-	this->ReadyTicketOffices = ReadyTicketOffices;
-	this->TicketOfficesOperationMutex = TicketOfficesOperationMutex;
+	this->cvTicketOfficeTurn = cvTicketOfficeTurn;
+	this->cvTicketOfficeResponse = cvTicketOfficeResponse;
+	this->cvPayTurn = cvPayTurn;
+	this->cvPayResponse = cvPayResponse;
+	this->TicketsRequestQueue = TicketsRequestQueue;
+	this->TicketsRequestQueueMutex = TicketsRequestQueueMutex;
 	this->TakenSeats = TakenSeats;
 	this->SeatsOperationMutex = SeatsOperationMutex;
 	this->PaymentRequestQueue = PaymentRequestQueue;
 	this->PaymentRequestQueueMutex = PaymentRequestQueueMutex;
+	this->PrintMutex = PrintMutex;
 	PaymentAccomplished = false;
 }
 
@@ -23,47 +29,68 @@ void TicketOffice::operator()()
 	TicketsRequest Request;
 
 	std::mutex TicketOperationAvailableMutex;
-	std::condition_variable cvTicketOperationAvailable;
-
-	std::condition_variable cvPaymentAccomplished;
 	std::mutex PaymentAccomplishedMutex;
+
+	std::unique_lock<std::mutex> PrintLock(*PrintMutex);
+	PrintLock.unlock();
 
 	while (true)
 	{
 		std::unique_lock<std::mutex> TicketOperationAvailableLock(TicketOperationAvailableMutex);
-		cvTicketOperationAvailable.wait(TicketOperationAvailableLock, [this] {return !TicketsRequests.empty(); });
+		cvTicketOfficeTurn->wait(TicketOperationAvailableLock, [this] {return !TicketsRequestQueue->empty(); });
 
-		Request = TicketsRequests.front();
-		TicketsRequests.pop();
+		std::unique_lock<std::mutex> TicketsRequestQueueLock(*TicketsRequestQueueMutex);
+		Request = TicketsRequestQueue->front();
+		TicketsRequestQueue->pop();
+		TicketsRequestQueueLock.unlock();
 
-		std::lock_guard<std::mutex> lkSeats(*SeatsOperationMutex);
+		PrintLock.lock();
+		std::cout << termcolor::magenta << "[TICKET OFFICE " << std::to_string(OfficeId) << "] Attending Client: " << Request.getClientInfo() << termcolor::reset << std::endl;
+		PrintLock.unlock();
+
+		std::unique_lock<std::mutex> lkSeats(*SeatsOperationMutex);
 		if (Request.getNumberOfSeats() + *TakenSeats > NUMBER_OF_SEATS)
 		{
+			PrintLock.lock();
+			std::cout << termcolor::red << "[TICKET OFFICE " << std::to_string(OfficeId) << "] Not Enought Tickets Client: " << Request.getClientInfo() << termcolor::reset << std::endl;
+			PrintLock.unlock();
+
 			Request.DenyOperation();
 		}
 		else
 		{
 			PaymentRequest PayRequest = PaymentRequest(RequestOrigin::TicketOffice, (TradeNode*)this, Request.getNumberOfSeats()*TICKET_PRICE);
-			std::lock_guard<std::mutex> PaymentRequestQueueLock(*PaymentRequestQueueMutex);
+
+			PrintLock.lock();
+			std::cout << termcolor::magenta << "[TICKET OFFICE " << std::to_string(OfficeId) << "] Sending Payment Request" << termcolor::reset << std::endl;
+			PrintLock.unlock();
+
+			std::unique_lock<std::mutex> PaymentRequestQueueLock(*PaymentRequestQueueMutex);
 			PaymentRequestQueue->push(PayRequest);
-			PaymentRequestQueueLock.~lock_guard();
+			PaymentRequestQueueLock.unlock();
+
+			cvPayTurn->notify_one();
 
 			std::unique_lock<std::mutex> PaymentAccomplishedLock(PaymentAccomplishedMutex);
-			cvPaymentAccomplished.wait(PaymentAccomplishedLock, [this] {return PaymentAccomplished; });
+			cvPayResponse->wait(PaymentAccomplishedLock, [this] {return PaymentAccomplished; });
+
+			PrintLock.lock();
+			std::cout << termcolor::magenta << "[TICKET OFFICE " << std::to_string(OfficeId) << "] Client: " << Request.getClientInfo() << " Attended" << termcolor::reset << std::endl;
+			PrintLock.unlock();
+
 			Request.AcceptOperation();
 			PaymentAccomplished = false;
 		}
-		lkSeats.~lock_guard();
+		lkSeats.unlock();
 
-		std::lock_guard<std::mutex> TicketOfficesOperationLock(*TicketOfficesOperationMutex);
-		ReadyTicketOffices->push(OfficeId);
+		cvTicketOfficeResponse->notify_all();
 
 	}
 }
 
-void TicketOffice::addRequest(TicketsRequest TicketRequest)
+std::string TicketOffice::getInfo()
 {
-	TicketsRequests.push(TicketRequest);
+	return std::string("Ticket Office "+std::to_string(OfficeId));
 }
 
 void TicketOffice::PayAccomplished()

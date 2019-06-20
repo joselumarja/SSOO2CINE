@@ -9,17 +9,19 @@
 class Replenishment
 {
 public:
-	Replenishment(int ReplenishmentId, std::queue<int> *ReadyReplenishment, std::mutex *ReplenishmentOperationMutex);
+	Replenishment(int ReplenishmentId, std::condition_variable *cvReplenishmentTurn, std::condition_variable *cvReplenishmentResponse, std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue, std::mutex *ReplenishmentRequestQueueMutex, std::mutex *PrintMutex);
 	~Replenishment();
 	void operator()();
-	void addRequest(ReplenishmentRequest ReplenishRequest);
 
 private:
 	int ReplenishmentId;
 
-	std::queue<int> *ReadyReplenishment;
-	std::mutex *ReplenishmentOperationMutex;
+	std::condition_variable *cvReplenishmentTurn;
+	std::condition_variable *cvReplenishmentResponse;
 
-	std::queue<ReplenishmentRequest> ReplenishRequests;
+	std::queue<ReplenishmentRequest> *ReplenishmentRequestQueue;
+	std::mutex *ReplenishmentRequestQueueMutex;
+
+	std::mutex *PrintMutex;
 };
 

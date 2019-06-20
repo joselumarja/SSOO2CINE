@@ -21,3 +21,8 @@ void ReplenishmentRequest::Replenish(int PopcornAmount, int DrinksAmount)
 	StandId->RefillDrinks(DrinksAmount);
 	StandId->RefilledStand();
 }
+
+std::string ReplenishmentRequest::getStandInfo()
+{
+	return StandId->getInfo();
+}

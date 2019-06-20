@@ -1,8 +1,10 @@
 #include "pch.h"
 #include "PaymentScheduler.h"
 
-PaymentScheduler::PaymentScheduler(std::queue<PaymentRequest>* PaymentRequestQueue, std::priority_queue<PaymentPriorityRequest>* PaymentPriorityRequestQueue, std::mutex * PaymentRequestQueueMutex, std::mutex * PaymentPriorityRequestQueueMutex)
+PaymentScheduler::PaymentScheduler(std::condition_variable *cvPayTurn, std::condition_variable *cvPayAvailable, std::queue<PaymentRequest> *PaymentRequestQueue, std::priority_queue<PaymentPriorityRequest> *PaymentPriorityRequestQueue, std::mutex *PaymentRequestQueueMutex, std::mutex *PaymentPriorityRequestQueueMutex)
 {
+	this->cvPayTurn = cvPayTurn;
+	this->cvPayAvailable = cvPayAvailable;
 	this->PaymentRequestQueue = PaymentRequestQueue;
 	this->PaymentPriorityRequestQueue = PaymentPriorityRequestQueue;
 	this->PaymentRequestQueueMutex = PaymentRequestQueueMutex;
@@ -18,7 +20,6 @@ void PaymentScheduler::operator()()
 	PaymentRequest PayRequest;
 	PaymentPriorityRequest PayPriorityRequest;
 
-	std::condition_variable cvPaymentRequestAvailable;
 	std::mutex PaymentRequestAvailableMutex;
 
 	int PaymentTicketsPriorityCount=0;
@@ -26,12 +27,12 @@ void PaymentScheduler::operator()()
 	while (true)
 	{
 		std::unique_lock<std::mutex> PaymentRequestAvailableLock(PaymentRequestAvailableMutex);
-		cvPaymentRequestAvailable.wait(PaymentRequestAvailableLock, [this] {return !PaymentRequestQueue->empty(); });
+		cvPayTurn->wait(PaymentRequestAvailableLock, [this] {return !PaymentRequestQueue->empty(); });
 
-		std::lock_guard<std::mutex> PaymentRequestQueueLock(*PaymentRequestQueueMutex);
+		std::unique_lock<std::mutex> PaymentRequestQueueLock(*PaymentRequestQueueMutex);
 		PayRequest = PaymentRequestQueue->front();
 		PaymentRequestQueue->pop();
-		PaymentRequestQueueLock.~lock_guard();
+		PaymentRequestQueueLock.unlock();
 
 		switch (PayRequest.getOrigin())
 		{
@@ -43,7 +44,10 @@ void PaymentScheduler::operator()()
 			break;
 		}
 
-		std::lock_guard<std::mutex> PaymentPriorityRequestQueueLock(*PaymentPriorityRequestQueueMutex);
+		std::unique_lock<std::mutex> PaymentPriorityRequestQueueLock(*PaymentPriorityRequestQueueMutex);
 		PaymentPriorityRequestQueue->push(PayPriorityRequest);
+		PaymentPriorityRequestQueueLock.unlock();
+
+		cvPayAvailable->notify_one();
 	}
 }

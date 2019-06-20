@@ -21,3 +21,8 @@ void PaymentRequest::notifyPaymentAccepted()
 {
 	TradeOrigin->PayAccomplished();
 }
+
+std::string PaymentRequest::getOriginInfo()
+{
+	return TradeOrigin->getInfo();
+}
