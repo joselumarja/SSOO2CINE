@@ -160,7 +160,6 @@
     <ClInclude Include="PaymentRequest.h" />
     <ClInclude Include="PaymentScheduler.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="PrintColorText.h" />
     <ClInclude Include="Replenishment.h" />
     <ClInclude Include="ReplenishmentRequest.h" />
     <ClInclude Include="Stand.h" />
@@ -181,7 +180,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PrintColorText.cpp" />
     <ClCompile Include="Replenishment.cpp" />
     <ClCompile Include="ReplenishmentRequest.cpp" />
     <ClCompile Include="SSOO2CINE.cpp" />

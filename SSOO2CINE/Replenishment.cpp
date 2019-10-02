@@ -39,13 +39,13 @@ void Replenishment::operator()()
 		ReplenishmentRequestQueueLock.unlock();
 
 		PrintLock.lock();
-		std::cout << termcolor::cyan << "[REPLENISHMENT " << std::to_string(ReplenishmentId) << "] Attending: " << Request.getStandInfo() << termcolor::reset << std::endl;
+		std::cout << termcolor::blue << "[REPLENISHMENT " << std::to_string(ReplenishmentId) << "] Attending: " << Request.getStandInfo() << termcolor::reset << std::endl;
 		PrintLock.unlock();
 
 		std::this_thread::sleep_for(std::chrono::seconds(10));
 
 		PrintLock.lock();
-		std::cout << termcolor::cyan << "[REPLENISHMENT " << std::to_string(ReplenishmentId) << "] " << Request.getStandInfo()<<" Attended" << termcolor::reset << std::endl;
+		std::cout << termcolor::blue << "[REPLENISHMENT " << std::to_string(ReplenishmentId) << "] " << Request.getStandInfo()<<" Attended" << termcolor::reset << std::endl;
 		PrintLock.unlock();
 
 		Request.Replenish(MAX_POPCORN_AMOUNT, MAX_DRINKS_AMOUNT);

@@ -16,9 +16,6 @@
     <Filter Include="Archivos de encabezado\Libraries">
       <UniqueIdentifier>{533ab287-4729-4068-b913-d1682e36691f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Archivos de origen\Libraries">
-      <UniqueIdentifier>{cfbd0376-91ef-4d58-af68-9f388dc49ea9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de encabezado\Tickets">
       <UniqueIdentifier>{4260379b-ab54-47eb-abac-c36db89d1d8d}</UniqueIdentifier>
     </Filter>
@@ -47,9 +44,6 @@
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
-    <ClInclude Include="PrintColorText.h">
-      <Filter>Archivos de encabezado\Libraries</Filter>
     </ClInclude>
     <ClInclude Include="Definitions.h">
       <Filter>Archivos de encabezado\Libraries</Filter>
@@ -100,9 +94,6 @@
     </ClCompile>
     <ClCompile Include="SSOO2CINE.cpp">
       <Filter>Archivos de origen</Filter>
-    </ClCompile>
-    <ClCompile Include="PrintColorText.cpp">
-      <Filter>Archivos de origen\Libraries</Filter>
     </ClCompile>
     <ClCompile Include="Client.cpp">
       <Filter>Archivos de origen</Filter>

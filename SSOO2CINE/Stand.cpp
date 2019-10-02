@@ -52,7 +52,7 @@ void Stand::operator()()
 		FoodAndDrinkRequestLock.unlock();
 
 		PrintLock.lock();
-		std::cout << termcolor::blue << "[STAND " << std::to_string(StandId) << "] Attending Client: " << Request.getClientInfo() << termcolor::reset << std::endl;
+		std::cout << termcolor::cyan << "[STAND " << std::to_string(StandId) << "] Attending Client: " << Request.getClientInfo() << termcolor::reset << std::endl;
 		PrintLock.unlock();
 
 		if (Request.getNumberOfDrinks() > DrinksAmount || Request.getNumberOfPopcorns() > PopcorAmount)
@@ -88,7 +88,7 @@ void Stand::operator()()
 		cvPayTurn->notify_one();
 
 		PrintLock.lock();
-		std::cout << termcolor::blue << "[STAND " << std::to_string(StandId) << "] Sending Payment Request" << termcolor::reset << std::endl;
+		std::cout << termcolor::cyan << "[STAND " << std::to_string(StandId) << "] Sending Payment Request" << termcolor::reset << std::endl;
 		PrintLock.unlock();
 		
 		std::unique_lock<std::mutex> PaymentAccomplishedLock(PaymentAccomplishedMutex);
@@ -97,7 +97,7 @@ void Stand::operator()()
 		PopcorAmount -= Request.getNumberOfPopcorns();
 
 		PrintLock.lock();
-		std::cout << termcolor::blue << "[STAND " << std::to_string(StandId) << "] Client: " << Request.getClientInfo()<<" Attended" << termcolor::reset << std::endl;
+		std::cout << termcolor::cyan << "[STAND " << std::to_string(StandId) << "] Client: " << Request.getClientInfo()<<" Attended" << termcolor::reset << std::endl;
 		PrintLock.unlock();
 
 		Request.RequestCompleted();
